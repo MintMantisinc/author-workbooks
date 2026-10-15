@@ -220,7 +220,9 @@ details.hintbox .hintbody em{color:var(--muted)}
       <div class="railfoot">
         <span class="savebadge" id="savebadge">Autosave on</span>
         <div class="storagewarn" id="storagewarn"><strong>Autosave is blocked in this browser.</strong> Your answers live only on this open page — use “Download backup” often, and before closing.</div>
-        <button class="railbtn" id="backupbtn">Back up my answers</button>
+        <button class="railbtn" id="savefilebtn">Save progress to file</button>
+        <button class="railbtn" id="loadfilebtn">Resume from a saved file</button>
+        <input type="file" id="loadfileinput" accept=".json,application/json" style="display:none">
       </div>
     </div>
   </aside>
@@ -249,7 +251,7 @@ const STEPS = [
     <li><span class="hownum">a</span><div><strong>Work in order.</strong> Each step builds on the one before — your earlier answers reappear when a later step needs them.</div></li>
     <li><span class="hownum">b</span><div><strong>Try before peeking.</strong> Most questions carry an <em>example</em> behind an amber panel. Attempt your own answer first — then open it and compare.</div></li>
     <li><span class="hownum">c</span><div><strong>Watch for the trap.</strong> Each step names the mistake most authors make right there. Read it before answering.</div></li>
-    <li><span class="hownum">d</span><div><strong>Everything autosaves</strong> on this device as you type (use the same browser throughout). The "Back up my answers" button on the left saves a copy anytime. At the end, you'll download your answers as a PDF and email them to Mint Mantis.</div></li>
+    <li><span class="hownum">d</span><div><strong>Your work is saved two ways.</strong> It autosaves in this browser as you type — and the "Save progress to file" button on the left downloads a progress file you can keep or email to yourself. Opening the workbook on another device or browser? Click "Resume from a saved file" and you'll pick up exactly where you left off. At the end, you'll download your answers as a PDF and email them to Mint Mantis.</div></li>
   </ul>`,
   fields:[
     {k:"au_name", label:"Your name", why:"", rows:1},
@@ -640,7 +642,7 @@ function buildPDF(){
   return doc;
 }
 function download(){
-  const btn=document.getElementById("dl") || document.getElementById("backupbtn");
+  const btn=document.getElementById("dl");
   try{
     if(window.jspdf && window.jspdf.jsPDF){
       buildPDF().save("Positioning-Workbook-Answers.pdf");
@@ -669,9 +671,43 @@ document.getElementById("mobiletoggle").addEventListener("click", ()=>{
   const open=w.classList.toggle("open");
   document.getElementById("mobiletoggle").setAttribute("aria-expanded", open?"true":"false");
 });
-document.getElementById("backupbtn").addEventListener("click", ()=>{
-  go(STEPS.length-1);
-  setTimeout(()=>{ const b=document.getElementById("st"); if(b && document.getElementById("textpanel").style.display==="none") b.click(); }, 0);
+function progressSnapshot(){
+  return {workbook: LS_KEY, savedAt: new Date().toISOString(), step: current, answers: answers};
+}
+function saveProgressFile(){
+  const raw = (answers["au_name"]||"author").trim().replace(/[^A-Za-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
+  const name = raw || "author";
+  const blob = new Blob([JSON.stringify(progressSnapshot(), null, 2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name + "-workbook-progress.json";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 5000);
+  const b = document.getElementById("savefilebtn");
+  if(b){ b.textContent = "Saved to your Downloads \u2713"; setTimeout(()=>{ b.textContent = "Save progress to file"; }, 3500); }
+}
+function importProgress(text){
+  let obj;
+  try{ obj = JSON.parse(text); }catch(e){ alert("That file could not be read. Please choose a progress file saved from this workbook."); return; }
+  if(!obj || typeof obj.answers !== "object" || obj.answers === null){ alert("That file does not look like a saved progress file."); return; }
+  if(obj.workbook && obj.workbook !== LS_KEY){
+    if(!confirm("This file was saved from a different workbook. Load it here anyway?")) return;
+  }
+  Object.keys(obj.answers).forEach(k=>{ answers[k] = obj.answers[k]; });
+  if(typeof obj.step === "number") current = Math.max(0, Math.min(obj.step, STEPS.length-1));
+  persist(); render();
+  const b = document.getElementById("loadfilebtn");
+  if(b){ b.textContent = "Progress restored \u2713"; setTimeout(()=>{ b.textContent = "Resume from a saved file"; }, 3500); }
+}
+document.getElementById("savefilebtn").addEventListener("click", saveProgressFile);
+document.getElementById("loadfilebtn").addEventListener("click", ()=>{ document.getElementById("loadfileinput").click(); });
+document.getElementById("loadfileinput").addEventListener("change", (e)=>{
+  const f = e.target.files && e.target.files[0];
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = ()=>importProgress(String(r.result));
+  r.readAsText(f);
+  e.target.value = "";
 });
 if(!storageOK){
   document.getElementById("storagewarn").classList.add("show");
