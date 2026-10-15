@@ -643,12 +643,14 @@ function download(){
     if(window.jspdf && window.jspdf.jsPDF){
       buildPDF().save("Pricing-Workbook-Answers.pdf");
     }else{
+      if(btn && btn.id==="dl"){ btn.textContent="No PDF engine here \u2014 saved a text file instead (check Downloads)"; setTimeout(()=>{ btn.textContent="Download my answers (PDF)"; }, 6000); }
       const blob = new Blob([buildMarkdown()], {type:"text/markdown"});
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
       a.download = "Pricing-Workbook-Answers.md";
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(()=>URL.revokeObjectURL(a.href), 5000);
+      return;
     }
     if(btn && btn.id==="dl"){ btn.textContent="PDF offered — check your Downloads folder"; setTimeout(()=>{btn.textContent="Download my answers (PDF)";}, 4000); }
   }catch(e){
