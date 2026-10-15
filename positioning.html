@@ -219,6 +219,8 @@ details.hintbox .hintbody em{color:var(--muted)}
       <nav aria-label="Workbook steps"><ul class="navlist" id="navlist"></ul></nav>
       <div class="railfoot">
         <span class="savebadge" id="savebadge">Autosave on</span>
+        <div class="meter" style="margin:10px 0 4px"><div id="railmeterfill" style="width:0%"></div></div>
+        <div id="railprog" style="font-size:11px; color:var(--muted)"></div>
         <div class="storagewarn" id="storagewarn"><strong>Autosave is blocked in this browser.</strong> Your answers live only on this open page — use “Download backup” often, and before closing.</div>
         <button class="railbtn" id="savefilebtn">Save progress to file</button>
         <button class="railbtn" id="loadfilebtn">Resume from a saved file</button>
@@ -241,7 +243,7 @@ const STEPS = [
     "The point is not to fill boxes. It's to arrive at answers <strong>you</strong> believe, because you found them. Budget roughly three hours across two or three sittings — natural break points are marked on the map below."
   ],
   html:`<ul class="stagemap">
-    <li><span class="stagenum">1</span><div><div class="stagename">Positioning <span class="stagetime">· ~75 min · sitting one</span></div><div class="stagedesc">Who this book must not fail, what you're truly up against, and what only you can claim. Nine steps, in Dunford's order.</div></div></li>
+    <li><span class="stagenum">1</span><div><div class="stagename">Positioning <span class="stagetime">· ~75 min · sitting one</span></div><div class="stagedesc">Who this book must not fail, what you're truly up against, and what only you can claim. Nine steps, in order.</div></div></li>
     <li><span class="stagenum">2</span><div><div class="stagename">Messaging <span class="stagetime">· ~25 min · sitting two</span></div><div class="stagedesc">Turning the positioning into words: your elevator answer, page headline, promise, and which stories lead.</div></div></li>
     <li><span class="stagenum">3</span><div><div class="stagename">Sales readiness <span class="stagetime">· ~30 min</span></div><div class="stagedesc">Your network, sorted; your openers, drafted; your campaign outreach, honestly sized.</div></div></li>
     <li><span class="stagenum">4</span><div><div class="stagename">System &amp; pricing <span class="stagetime">· ~30 min · sitting three</span></div><div class="stagedesc">The ladder from free tool to premium offers, priced — this becomes your campaign's reward tiers.</div></div></li>
@@ -251,15 +253,15 @@ const STEPS = [
     <li><span class="hownum">a</span><div><strong>Work in order.</strong> Each step builds on the one before — your earlier answers reappear when a later step needs them.</div></li>
     <li><span class="hownum">b</span><div><strong>Try before peeking.</strong> Most questions carry an <em>example</em> behind an amber panel. Attempt your own answer first — then open it and compare.</div></li>
     <li><span class="hownum">c</span><div><strong>Watch for the trap.</strong> Each step names the mistake most authors make right there. Read it before answering.</div></li>
-    <li><span class="hownum">d</span><div><strong>Your work is saved two ways.</strong> It autosaves in this browser as you type — and the "Save progress to file" button on the left downloads a progress file you can keep or email to yourself. Opening the workbook on another device or browser? Click "Resume from a saved file" and you'll pick up exactly where you left off. At the end, you'll download your answers as a PDF and email them to Mint Mantis.</div></li>
+    <li><span class="hownum">d</span><div><strong>Your work is saved two ways.</strong> It autosaves in this browser as you type — and the “Save progress to file” button on the left downloads a progress file you can keep or email to yourself. Opening the workbook on another device or browser? Click “Resume from a saved file” and you'll pick up exactly where you left off. At the end, you'll download your answers as a PDF and email them to Mint Mantis.</div></li>
   </ul>`,
   fields:[
-    {k:"au_name", label:"Your name", why:"", rows:1},
-    {k:"au_book", label:"Your book's working title", why:"", rows:1},
-    {k:"au_email", label:"Your email", why:"So we can reply to your submission.", rows:1}
+    {k:"au_name", label:"Your name", why:"", rows:1, ph:"Jane Smith"},
+    {k:"au_book", label:"Your book's working title", why:"", rows:1, ph:"A working title is fine"},
+    {k:"au_email", label:"Your email", why:"So we can reply to your submission.", rows:1, ph:"you@example.com"}
   ]
 },
-{ id:"dest", nav:"The Destination", group:"Ground work", eyebrow:"Ground work", title:"Before positioning: where is this going?",
+{ id:"dest", nav:"The Destination", group:"Groundwork", eyebrow:"Groundwork", title:"Before positioning: where is this going?",
   intro:["The book is a front door to a larger goal — a practice, a company, a platform. Before we position the door, we define the house. Every later answer gets judged against what you write here."],
   trap:"Most authors answer this stage with a feeling — “get the book out there,” “build momentum.” Feelings can't be planned toward, and a campaign can't be designed around them. If your answers here have no numbers in them, they aren't answers yet.",
   fields:[
@@ -267,11 +269,11 @@ const STEPS = [
      hint:"Example: “I have 8–10 paying clients at premium rates, 2–3 corporate workshop or speaking engagements booked, and the book got me into those rooms.”"},
     {k:"dest_offer", label:"What do you sell today — and what would you like to sell?", why:"Format, duration, price. If you've never charged, write what you'd charge if forced to name a number tomorrow. Your campaign's high-value reward tiers are built from this.", rows:5},
     {k:"dest_clients", label:"Who have you already served — paid or unpaid — and what changed for them?", why:"Name 3–5 real people (initials fine): role, situation when they came to you, outcome. These become testimonials and campaign-page proof. Publishers silently ask: does anyone already pay this person for this?", rows:6},
-    {k:"dest_network", label:"Who could you ask TODAY for an endorsement, a bulk order, or a booking?", why:"List every professional relationship, former colleague now senior, industry contact, and connection who takes your calls. This list is the campaign.", rows:6}
+    {k:"dest_network", label:"Who could you ask TODAY for an endorsement, a bulk order, or a booking?", why:"List everyone who takes your calls: professional relationships, former colleagues now senior, industry contacts, old classmates. This list is the campaign.", rows:6}
   ]
 },
 { id:"d1", nav:"Best customers", group:"Stage 1 · Positioning", eyebrow:"Stage 1 · Positioning — Step 1 of 9", title:"Start with the people you've served best.",
-  intro:["Dunford's process begins here, not with slogans: <strong>your best positioning is hiding in the people who already love what you do.</strong> Not everyone you've helped — the ones where it clearly, almost easily, worked."],
+  intro:["The process begins here, not with slogans: <strong>your best positioning is hiding in the people who already love what you do.</strong> Not everyone you've helped — the ones where it clearly, almost easily, worked."],
   trap:"The trap here is listing the people you'd LIKE to serve instead of the people you actually served well. Aspiration contaminates the data. Only real names, real situations, real outcomes — the pattern you need is hiding in what already worked, not in what you hope works next.",
   fields:[
     {k:"d1_best", label:"List 3–5 people you have helped with the problem your book addresses — where it visibly worked.", why:"Formally or informally, paid or not. For each: initials, role, the situation they were in, what changed.", rows:7,
@@ -280,21 +282,21 @@ const STEPS = [
   ]
 },
 { id:"d2", nav:"Put down baggage", group:null, eyebrow:"Stage 1 · Positioning — Step 2 of 9", title:"Put down the positioning baggage.",
-  intro:["Every author carries a default description of their book — usually the one that formed first, not the one that serves best. Dunford's instruction: write it down, look at it, and consciously decide what you're free to let go of."],
+  intro:["Every author carries a default description of their book — usually the one that formed first, not the one that serves best. The instruction is simple: write it down, look at it, and consciously decide what you're free to let go of."],
   trap:"The trap is defending “it's for everyone” because narrowing feels like turning readers away. It's the reverse: a book for everyone competes with everything and gets chosen by no one. Narrowing is not shrinking your audience — it's the only way to win one. The general reader can still buy the book; they just aren't who the pitch speaks to.",
   fields:[
     {k:"d2_current", label:"When someone at a dinner party asks 'what's your book about?' — what do you currently say? Write it exactly, in one breath.", why:"Don't improve it. Capture the real current answer — that's the baseline we're repositioning.", rows:3},
     {k:"d2_wish", label:"And what do you WISH you could say — the answer that would make the right person lean in?", why:"The gap between these two answers usually reveals the positioning problem better than any framework.", rows:3},
     {k:"d2_baggage", label:"What assumptions about this book might you need to release?", why:"E.g., 'it's for everyone,' 'it's my life story,' 'the entertaining stories are the heart of it,' 'I shouldn't lead with my credential.' Naming them is what lets you choose deliberately instead of by habit.", rows:5,
-     hint:"Most first drafts promise the book is for “anyone who…” — Dunford would call ‘everyone’ the heaviest baggage a positioning can carry. What are you relieved to stop claiming?"}
+     hint:"Most first drafts promise the book is for “anyone who…” — and “everyone” is the heaviest baggage a positioning can carry. What are you relieved to stop claiming?"}
   ]
 },
 { id:"d3", nav:"True alternatives", group:null, eyebrow:"Stage 1 · Positioning — Step 3 of 9", title:"What would they do if you didn't exist?",
-  intro:["Dunford's sharpest reframe: <strong>you are not positioned against competitors — you are positioned against whatever your reader would actually do instead.</strong> Often that's 'nothing,' 'push harder,' or a cheap generic service."],
+  intro:["The sharpest reframe in all of positioning: <strong>you are not positioned against competitors — you are positioned against whatever your reader would actually do instead.</strong> Often that's 'nothing,' 'push harder,' or a cheap generic service."],
   recall:{title:"From Step 1 — your best-served people", key:"d1_common"},
   trap:"The trap is naming famous authors as your competition. Your reader's real alternative usually isn't a rival book — it's doing nothing, hiring a generic service, or asking a friend. If your list is all books, you haven't found the real default yet — and the real default is the one your positioning must beat.",
   fields:[
-    {k:"d3_alts", label:"If this book — and you — didn't exist, what would that person do about their situation? List everything.", why:"Other books, services, advisors, free content, DIY, denial, doing nothing. Include the do-nothing option — it's usually the strongest competitor.", rows:7},
+    {k:"d3_alts", label:"If this book — and you — didn't exist, what would that person do about their situation? List everything.", why:"Other books, services, advisors, free content, DIY, denial. Include the do-nothing option — it's usually the strongest competitor.", rows:7},
     {k:"d3_real", label:"Which ONE of those is the real default — the thing most of them actually do?", why:"Your positioning must beat this specific alternative, not a straw man.", rows:3}
   ]
 },
@@ -305,7 +307,7 @@ const STEPS = [
   fields:[
     {k:"d4_attrs", label:"List 6–10 attributes none of those alternatives can claim. Then mark your top three with a star.", why:"These are the raw material for everything that follows. Facts, not virtues.", rows:9,
      hint:"Categories to mine: lived experience of the exact problem · credentials and institutions · a named method of your own · an audience or platform · insider access to an industry · being living proof of the book's promise."},
-    {k:"d4_unlike", label:"Complete three times, against your top three alternatives: “Unlike ___, I / this book ___.”", why:"Forces each attribute to do work against a real alternative.", rows:5},
+    {k:"d4_unlike", label:"Complete this sentence three times, once for each of your top three alternatives: “Unlike ___, I / this book ___.”", why:"Forces each attribute to do work against a real alternative.", rows:5},
     {k:"d4_not", label:"What are you NOT? Name the misreadings to prevent.", why:"Positioning is also fencing off. What might a skimming reader mistake this book for?", rows:3}
   ]
 },
@@ -318,15 +320,15 @@ const STEPS = [
      hint:"Example shape: “I've solved this problem for 20 years (attribute) → my guidance comes from pattern-recognition, not theory (benefit) → the reader gets a tested path and avoids the expensive first mistake (value) → proof: the case studies in the book; my client results.”"},
     {k:"d5_chain2", label:"Chain 2.", why:"", rows:5, opt:true},
     {k:"d5_chain3", label:"Chain 3.", why:"", rows:5, opt:true},
-    {k:"d5_themes", label:"Look at your chains. What one or two VALUE THEMES do they cluster into?", why:"Dunford: attributes cluster into a small number of value themes — these become the spine of your campaign page.", rows:3}
+    {k:"d5_themes", label:"Look at your chains. What one or two VALUE THEMES do they cluster into?", why:"Attributes cluster into a small number of value themes — these become the spine of your campaign page.", rows:3}
   ]
 },
 { id:"d6", nav:"Who cares a lot", group:null, eyebrow:"Stage 1 · Positioning — Step 6 of 9", title:"Who cares a great deal about that value?",
-  intro:["Not who <em>could</em> benefit — who <strong>cares intensely, right now, and will act.</strong> Dunford: your best-fit segment is the group for whom your value is a burning need, not a nice-to-have."],
+  intro:["Not who <em>could</em> benefit — who <strong>cares intensely, right now, and will act.</strong> Your best-fit segment is the group for whom your value is a burning need, not a nice-to-have."],
   recall:{title:"From Step 5 — your value themes", key:"d5_themes"},
   trap:"The trap is choosing the audience you LIKE over the audience with urgency and budget. The segment that funds a campaign and a business is the one where the problem has a date on it and money behind it. Affection is not a segmentation criterion; urgency is.",
   fields:[
-    {k:"d6_rank", label:"List 3–4 candidate reader groups for YOUR book, rank them — and say why your #1 wins.", why:"Consider: who has the most urgent version of the problem? Who has budget? Whose story do you actually tell in the book?", rows:5,
+    {k:"d6_rank", label:"List 3–4 candidate reader groups for YOUR book and rank them — then say why your #1 wins.", why:"Consider: who has the most urgent version of the problem? Who has budget? Whose story do you actually tell in the book?", rows:5,
      hint:"Rank on three tests: urgency (is there a date on their problem?) · budget (can they pay for the solution beyond the book?) · fit (is their story the one your book actually tells?)."},
     {k:"d6_person", label:"Now describe the ONE person this book must not fail. So specific it feels too narrow.", why:"Age, role, what just happened to them, what they fear, what they've already tried. Everyone else still gets to buy the book — but this person is who the campaign page speaks to.", rows:6},
     {k:"d6_buyer", label:"Is the BUYER of your services that same person — or someone else?", why:"The individual paying personally vs. an organization buying on their behalf. If companies buy, your campaign needs corporate-facing tiers.", rows:4},
@@ -334,28 +336,29 @@ const STEPS = [
   ]
 },
 { id:"d7", nav:"Market frame", group:null, eyebrow:"Stage 1 · Positioning — Step 7 of 9", title:"Choose the market you'll win.",
-  intro:["The market category is context that makes your value obvious <strong>without explanation.</strong> Dunford offers three styles: compete <em>head-to-head</em> in an existing category; be the <em>big fish in a smaller pond</em> (a niche of an existing category); or <em>create a new game</em> (rare, expensive — needs missionary marketing)."],
+  intro:["The market category is context that makes your value obvious <strong>without explanation.</strong> There are three ways to play it: compete <em>head-to-head</em> in an existing category; be the <em>big fish in a smaller pond</em> (a niche of an existing category); or <em>create a new game</em> (rare, expensive — needs missionary marketing)."],
   recall:{title:"From Step 6 — your one person", key:"d6_person"},
   trap:"Two traps. The comfortable one: staying on the ‘memoir’ shelf because that's the book you set out to write — memoir is where first-time authors go unfunded. The ambitious one: inventing a brand-new category — new categories demand missionary marketing budgets you don't have. The winning move is usually the modest-looking one: a sharp niche of a shelf that already has buyers.",
   fields:[
     {k:"d7_shelf", label:"Name 2–3 shelves this book could sit on. Pick the one you can WIN, and say why.", why:"Category sets reader and publisher expectations you never have to explain.", rows:4},
-    {k:"d7_style", label:"Which of Dunford's three styles are you playing — and what's the pond, precisely?", why:"Write it as: 'Within [existing category], for [your person], the [your niche].'", rows:3}
+    {k:"d7_style", label:"Which of the three styles are you playing — and what's the pond, precisely?", why:"Write it as: 'Within [existing category], for [your person], the [your niche].'", rows:3}
   ]
 },
 { id:"d8", nav:"Why now (trend)", group:null, eyebrow:"Stage 1 · Positioning — Step 8 of 9", title:"Layer on a trend — carefully.",
-  intro:["Dunford's final layer, with a warning: a trend only helps if the connection to <strong>your value</strong> is obvious. Trend without positioning confuses; positioning without trend just moves slower. Why does this book matter NOW?"],
+  intro:["The final layer comes with a warning: a trend only helps if the connection to <strong>your value</strong> is obvious. Trend without positioning confuses; positioning without trend just moves slower. Why does this book matter NOW?"],
   trap:"The trap is trend-jacking — bolting the book onto whatever is loud (AI! the economy!) without a load-bearing connection. If you deleted the trend sentence and the pitch still made sense, the trend wasn't doing anything. The test: does the trend make YOUR person's problem more urgent, or just make the page sound current?",
   fields:[
     {k:"d8_trend", label:"What is happening in the world right now that makes your person's problem urgent — and how does your book connect to it?", why:"This gives media, publishers, and buyers a reason to act this year, not eventually.", rows:5}
   ]
 },
 { id:"canvas", nav:"Your positioning", group:null, eyebrow:"Stage 1 · Positioning — Step 9 of 9", title:"Capture it: your positioning canvas.",
-  intro:["This is the payoff. Below, your own answers are assembled into Dunford's positioning canvas. Read it aloud. Where it rings false, go back and fix the step — not the sentence."],
+  intro:["This is the payoff. Below, your own answers are assembled into your positioning canvas. Read it aloud. Where it rings false, go back and fix the step — not the sentence."],
   canvas:true,
   trap:"The trap at the finish line is wordsmithing — polishing the sentence until it sounds impressive while quietly papering over a weak step. If a slot feels wrong, the problem is upstream: the wrong person, a straw-man alternative, an unproven value. Fix the step; the sentence fixes itself.",
   fields:[
     {k:"c_statement", label:"Now write the positioning statement in your own voice — edit until every clause is true.", why:"Template: For [your person] who [their situation], [your book] is [category] that [value]. Unlike [real alternative], it [unique attribute + proof].", rows:6}
-  ]
+  ],
+  pause:"That completes Stage 1 — a natural place to pause. Everything is saved, and Stage 2 (Messaging) reads better with fresh eyes."
 },
 { id:"msg", nav:"Messaging", group:"Stage 2 · Messaging", eyebrow:"Stage 2 · Messaging", title:"Turn the positioning into words that land.",
   intro:["Positioning is a decision; messaging is that decision <strong>wearing your reader's language.</strong> Everything here must trace back to Stage 1 — and be written in the words your person uses (Step 6), not the words you love."],
@@ -372,19 +375,20 @@ const STEPS = [
 },
 { id:"sales", nav:"Outreach readiness", group:"Stage 3 · Sales", eyebrow:"Stage 3 · Sales — Smart Calling (Art Sobczak)", title:"Your campaign outreach, prepared.",
   intro:["Your campaign succeeds through direct, personal outreach — not passive posting. Sobczak's method: never contact anyone 'cold.' Lead with a <strong>possible value proposition</strong> aimed at what they care about, not at your book."],
-  recall:{title:"From Ground work — your network list", key:"dest_network"},
+  recall:{title:"From Groundwork — your network list", key:"dest_network"},
   trap:"Three traps stack up here. Broadcasting instead of asking — posts feel productive and convert almost nothing; the campaign is won one personal message at a time. The ‘I wrote a book’ opener — that's about you; Sobczak's openers are about THEM. And heroic capacity estimates — plan for the outreach you'll do in week three when it's tedious, not week one when it's thrilling.",
   fields:[
-    {k:"s_segments", label:"Sort your network into four groups, with rough counts: Champions · High-tier prospects · Amplifiers · Endorsers.", why:"Champions buy and push others to. High-tier prospects could take a $1K–$12K tier (services bundled with bulk books). Amplifiers have audiences. Endorsers lend names for the campaign page. Different message, ask, and tier for each.", rows:7},
+    {k:"s_segments", label:"Sort your network into four groups, with rough counts: Champions · High-tier prospects · Amplifiers · Endorsers.", why:"Champions buy and bring others with them. High-tier prospects could take a $1K–$12K tier (services bundled with bulk books). Amplifiers have audiences. Endorsers lend names for the campaign page. Different message, ask, and tier for each.", rows:7},
     {k:"s_top10", label:"For your top 10 high-tier prospects: what problem do THEY have that your service solves? One line each.", why:"'I wrote a book' earns politeness; naming their current problem earns a meeting.", rows:8},
-    {k:"s_openers", label:"Draft your three openers: (a) former colleague, now senior, for a team/bulk tier · (b) warm contact for a preorder + share · (c) a name, for an endorsement.", why:"Get honest first versions down — they'll be refined in review.", rows:7},
+    {k:"s_openers", label:"Draft your three openers: (a) former colleague, now senior, for a team/bulk tier · (b) warm contact for a preorder + share · (c) a respected name you'd ask for an endorsement.", why:"Get honest first versions down — they'll be refined in review.", rows:7},
     {k:"s_capacity", label:"Honest capacity during the campaign: hours per week, and personal messages or calls per day you will truly send.", why:"Winning campaigns front-load week one. Plan targets around real capacity, not aspiration.", rows:3},
     {k:"s_objections", label:"The objections you dread — and your answers.", why:"E.g., 'Why pre-order an unfinished book?' · 'What qualifies you?' Writing the dreaded question defuses it — and becomes campaign-page FAQ copy.", rows:6}
-  ]
+  ],
+  pause:"End of sitting two — another good place to pause. Pricing decisions deserve a clear head."
 },
 { id:"sys", nav:"Ladder & pricing", group:"Stage 4 · System", eyebrow:"Stage 4 · System — Key Person of Influence (Daniel Priestley)", title:"The ladder the book opens — priced.",
   intro:["Priestley's five P's — Pitch, Publish, Product, Profile, Partnerships — treat the book as one pillar of a business, not the business. The goal: leave the campaign with an <strong>ascending, priced ladder</strong>, not just book sales. Your ladder becomes the campaign's reward tiers."],
-  recall:{title:"From Ground work — what you sell", key:"dest_offer"},
+  recall:{title:"From Groundwork — what you sell", key:"dest_offer"},
   trap:"The costly traps here are pricing from fear and the missing middle rung. Underpricing the top of the ladder tells a serious buyer you're not their tier. And a ladder that jumps from a $30 book to a five-figure engagement strands everyone in between; the $250–$900 middle rungs are where strangers become clients. Price the top with a straight face, and build the middle.",
   fields:[
     {k:"f_ladder", label:"Fill in each rung — name and price, free to premium.", why:"Free (a diagnostic or tool) → the book ($20–35 tiers) → mid (group program, workshop, $250–$900) → high (1:1 services) → premium (organizational: workshop, keynote, advisory, $2,500–$12,500).", rows:8},
@@ -409,7 +413,7 @@ const STEPS = [
   ]
 },
 { id:"review", nav:"Review & send", group:"Finish", eyebrow:"Finish", title:"Review your answers and send them in.",
-  intro:["Everything you've written is compiled below. Skim for anything that no longer rings true — you can jump back to any step from the left. When it reads honest, download the PDF and email it to Mint Mantis for review."],
+  intro:["Everything you've written is compiled below. Skim for anything that no longer rings true — you can jump back to any step from the left. Then finish in two clicks: <strong>1)</strong> download the PDF, and <strong>2)</strong> attach it to an email to Mint Mantis (the email button opens a pre-addressed message)."],
   review:true, fields:[]
 }
 
@@ -479,6 +483,12 @@ function refreshNav(){
     if(i===current){ b.setAttribute("aria-current","step"); } else { b.removeAttribute("aria-current"); }
   });
   document.getElementById("mobilelabel").textContent = `${current+1} of ${STEPS.length} · ${STEPS[current].nav}`;
+  let tot=0, ans=0;
+  STEPS.forEach(stp=>stp.fields.forEach(f=>{ if(!f.opt){ tot++; if((answers[f.k]||"").trim()) ans++; } }));
+  const fill=document.getElementById("railmeterfill");
+  if(fill){ fill.style.width = (tot? Math.round(ans/tot*100):0) + "%"; }
+  const rp=document.getElementById("railprog");
+  if(rp){ rp.textContent = ans + " of " + tot + " questions answered"; }
 }
 
 function fieldHTML(f){
@@ -486,7 +496,7 @@ function fieldHTML(f){
   return `<div class="q">
     <label for="f_${f.k}">${f.label}${f.opt?`<span class="optional">optional</span>`:""}</label>
     ${f.why?`<p class="why">${f.why}</p>`:""}
-    <textarea id="f_${f.k}" data-key="${f.k}" rows="${f.rows||4}" placeholder="Your answer…">${val}</textarea>
+    <textarea id="f_${f.k}" data-key="${f.k}" rows="${f.rows||4}" placeholder="${f.ph?esc(f.ph):"Your answer…"}">${val}</textarea>
     ${f.hint?`<details class="hintbox"><summary>${HINT}</summary><div class="hintbody">${f.hint}</div></details>`:""}
   </div>`;
 }
@@ -557,8 +567,10 @@ function render(){
     <div class="stepnav">
       ${current>0?`<button class="btn ghost" id="prev">← Back</button>`:""}
       ${current<STEPS.length-1?`<button class="btn" id="next">${current===0?"Begin →":"Save & continue →"}</button>`:""}
+      ${current>0?`<button class="btn ghost" id="savemini" title="Download a progress file you can resume from on any device">Save a backup file</button>`:""}
       <span class="stepcount">${current+1} / ${STEPS.length}</span>
     </div>
+    ${st.pause?`<p style="font-size:13px; color:var(--muted); margin-top:14px; border-top:1px dashed var(--line-strong); padding-top:10px">${st.pause}</p>`:""}
   </section>`;
   main.innerHTML = html;
   main.querySelectorAll("textarea[data-key]").forEach(t=>{
@@ -566,6 +578,7 @@ function render(){
   });
   const nx=document.getElementById("next"); if(nx) nx.addEventListener("click", ()=>go(current+1));
   const pv=document.getElementById("prev"); if(pv) pv.addEventListener("click", ()=>go(current-1));
+  const sm=document.getElementById("savemini"); if(sm) sm.addEventListener("click", saveProgressFile);
   if(st.review){
     document.getElementById("dl").addEventListener("click", download);
     document.getElementById("cp").addEventListener("click", copyAll);
