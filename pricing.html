@@ -1,3 +1,9 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
 <title>Author Pricing & Bundling Workbook — Mint Mantis</title>
 <style>
 :root{
@@ -211,6 +217,8 @@ table.ct td{padding:7px 9px; border:1px solid var(--line); vertical-align:top}
 @media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important} }
 :focus-visible{outline:2px solid var(--accent); outline-offset:2px}
 </style>
+</head>
+<body>
 
 <div class="app">
   <aside class="rail">
@@ -421,7 +429,7 @@ function persist(){
   }
 }
 let saveTimer=null;
-function queueSave(){ clearTimeout(saveTimer); saveTimer=setTimeout(persist, 400); }
+function queueSave(){ clearTimeout(saveTimer); saveTimer=setTimeout(()=>{ persist(); try{ refreshNav(); }catch(e){} }, 400); }
 
 /* ---------------- render ---------------- */
 const main = document.getElementById("main");
@@ -523,7 +531,7 @@ function reviewHTML(){
 
 function render(){
   const st = STEPS[current];
-  let html = `<section class="step visible" aria-labelledby="steptitle">
+  let html = (storageOK ? "" : '<div class="callout trap" style="max-width:640px; margin-bottom:18px"><span class="cn">Autosave is blocked in this browser</span>Your answers live only on this open page. Use \u201cSave progress to file\u201d before closing.</div>') + `<section class="step visible" aria-labelledby="steptitle">
     <p class="eyebrow">${esc(st.eyebrow)}</p>
     <h2 id="steptitle">${esc(st.title)}</h2>
     ${st.intro.map(p=>`<p class="intro">${p}</p>`).join("")}
@@ -561,6 +569,8 @@ function render(){
     });
   }
   refreshNav();
+  const hd = document.getElementById("steptitle");
+  if(hd){ hd.setAttribute("tabindex","-1"); try{ hd.focus({preventScroll:true}); }catch(e){} }
   window.scrollTo({top:0});
 }
 
@@ -621,8 +631,14 @@ function buildPDF(){
   });
   return doc;
 }
+function pdfCanRender(t){ return !/[^\x00-\xFF\u2018\u2019\u201C\u201D\u2013\u2014\u2026\u2192\u2190\u2605\u25CF\u25C6\u00B7\u2713]/.test(t); }
 function download(){
   const btn=document.getElementById("dl");
+  if(window.jspdf && window.jspdf.jsPDF && !pdfCanRender(buildMarkdown())){
+    if(btn){ btn.textContent = "Opening your browser's print dialog \u2014 choose \u201cSave as PDF\u201d"; setTimeout(()=>{ btn.textContent = "Download my answers (PDF)"; }, 6000); }
+    setTimeout(()=>{ try{ window.print(); }catch(e){} }, 150);
+    return;
+  }
   try{
     if(window.jspdf && window.jspdf.jsPDF){
       buildPDF().save("Pricing-Workbook-Answers.pdf");
@@ -634,7 +650,7 @@ function download(){
       document.body.appendChild(a); a.click(); a.remove();
       setTimeout(()=>URL.revokeObjectURL(a.href), 5000);
     }
-    if(btn && btn.id==="dl"){ btn.textContent="Saved to your Downloads folder ✓"; setTimeout(()=>{btn.textContent="Download my answers (PDF)";}, 4000); }
+    if(btn && btn.id==="dl"){ btn.textContent="PDF offered — check your Downloads folder"; setTimeout(()=>{btn.textContent="Download my answers (PDF)";}, 4000); }
   }catch(e){
     if(btn && btn.id==="dl"){ btn.textContent="Download blocked — use 'Show answers as text'"; }
   }
@@ -673,7 +689,11 @@ function importProgress(text){
   if(obj.workbook && obj.workbook !== LS_KEY){
     if(!confirm("This file was saved from a different workbook. Load it here anyway?")) return;
   }
-  Object.keys(obj.answers).forEach(k=>{ answers[k] = obj.answers[k]; });
+  const incoming = {};
+  Object.keys(obj.answers).forEach(k=>{ if(typeof obj.answers[k] === "string") incoming[k] = obj.answers[k]; });
+  if(!Object.keys(incoming).length){ alert("No usable answers were found in that file."); return; }
+  if(!confirm("Load this progress file? Questions saved in the file will replace your current answers for those questions. Questions not in the file keep what you have now.")) return;
+  Object.keys(incoming).forEach(k=>{ answers[k] = incoming[k]; });
   if(typeof obj.step === "number") current = Math.max(0, Math.min(obj.step, STEPS.length-1));
   persist(); render();
   const b = document.getElementById("loadfilebtn");
@@ -697,3 +717,5 @@ if(!storageOK){
 
 buildNav(); render();
 </script>
+</body>
+</html>
