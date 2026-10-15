@@ -544,7 +544,7 @@ function refreshNav(){
   const fill=document.getElementById("railmeterfill");
   if(fill){ fill.style.width = (tot? Math.round(ans/tot*100):0) + "%"; }
   const rp=document.getElementById("railprog");
-  if(rp){ rp.textContent = ans + " of " + tot + " questions answered"; }
+  if(rp){ rp.textContent = ans + " of " + tot + " required questions answered"; }
 }
 
 function fieldHTML(f){
